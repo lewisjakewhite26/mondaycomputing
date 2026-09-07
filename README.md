@@ -1,32 +1,32 @@
-# React + TypeScript + Vite
+# Online Safety — Computing (Year 6)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An interactive, teacher-led online-safety lesson. Pupils work through branching
+chat scenarios on Roblox, WhatsApp and Snapchat: read the situation, discuss,
+vote as a class, then reveal the outcome of every choice.
 
-Currently, two official plugins are available:
+## Running the app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # production build in dist/
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Built with React + TypeScript + Vite. Press the ⛶ button (top-right) for
+full screen when presenting.
+
+## Offline backup — `LESSON-SLIDES.html`
+
+If the app can't run on the day, open **`LESSON-SLIDES.html`** in any browser.
+It's a single self-contained file (no internet needed) with the whole lesson as
+slides:
+
+- Arrow keys / space to move, `F` for full screen, click the left/right edges.
+- `Ctrl+P` → "Save as PDF" to keep a printable copy.
+- Same scenarios, choices, outcomes and the "it's never your fault" message as
+  the app, plus a short teacher note and the golden rules / Childline number.
+
+## Lesson content
+
+Scenario text lives in [`src/data/scenarios.ts`](src/data/scenarios.ts). The
+slide deck mirrors it.

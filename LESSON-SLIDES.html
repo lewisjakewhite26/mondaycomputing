@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Online Safety — Computing (offline slides)</title>
+<style>
+  :root {
+    --bg: #0a0e27;
+    --bg2: #1a1f3a;
+    --ink: #e8ecff;
+    --muted: #a5b4fc;
+    --panel: rgba(30, 41, 59, 0.6);
+    --line: rgba(99, 102, 241, 0.28);
+    --accent: #8b5cf6;
+    --good: #34d399;
+    --warn: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, var(--bg) 0%, var(--bg2) 100%);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  .deck { position: fixed; inset: 0; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: min(6vh, 60px) min(8vw, 110px);
+    animation: fade 0.25s ease;
+  }
+  .slide.current { display: flex; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  h1 { font-size: clamp(2.2rem, 6vw, 4.2rem); margin: 0 0 0.3em; line-height: 1.05; }
+  h2 { font-size: clamp(1.6rem, 3.6vw, 2.7rem); margin: 0 0 0.5em; line-height: 1.15; }
+  h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); margin: 0 0 0.4em; color: var(--muted); }
+  p, li { font-size: clamp(1rem, 1.9vw, 1.35rem); line-height: 1.55; }
+
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 800;
+    font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+
+  .bullets { margin: 0.4em 0 0; padding-left: 1.1em; }
+  .bullets li { margin: 0.5em 0; }
+
+  /* chat */
+  .chat { display: flex; flex-direction: column; gap: 12px; max-width: 900px; margin: 8px 0 22px; }
+  .msg { max-width: 78%; padding: 12px 16px; border-radius: 14px; font-size: clamp(0.95rem, 1.7vw, 1.2rem); line-height: 1.5; }
+  .msg.system {
+    align-self: center;
+    max-width: 92%;
+    text-align: center;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #d7deef;
+    font-size: clamp(0.9rem, 1.55vw, 1.1rem);
+  }
+  .msg.other {
+    align-self: flex-start;
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--line);
+    border-bottom-left-radius: 4px;
+  }
+  .msg .who { display: block; font-weight: 800; font-size: 0.85em; margin-bottom: 3px; color: #c4b5fd; }
+
+  /* choices */
+  .choices { display: flex; flex-direction: column; gap: 12px; max-width: 1000px; }
+  .choice, .outcome {
+    display: flex;
+    gap: 14px;
+    padding: 14px 18px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .letter {
+    flex: 0 0 auto;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.25);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800;
+  }
+  .outcome.best { border-color: rgba(52, 211, 153, 0.6); background: rgba(52, 211, 153, 0.08); }
+  .outcome.best .letter { background: rgba(52, 211, 153, 0.25); border-color: rgba(52, 211, 153, 0.5); }
+  .outcome .body p { margin: 0; }
+  .outcome .pick { margin: 0 0 4px; font-weight: 700; }
+  .outcome .what { margin: 0; color: #cbd5e1; }
+  .best-flag { display: inline-block; font-size: 0.75em; font-weight: 800; letter-spacing: 0.5px; color: var(--good); margin-left: 8px; }
+
+  .talk {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .fault {
+    max-width: 1000px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.16), rgba(6,182,212,0.12));
+    border: 1px solid rgba(52,211,153,0.45);
+    border-radius: 18px;
+    padding: 30px 34px;
+  }
+  .fault p { font-size: clamp(1.1rem, 2.3vw, 1.7rem); margin: 0; }
+
+  .teacher {
+    max-width: 1000px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: 16px;
+    padding: 26px 30px;
+  }
+  .teacher h3 { color: var(--warn); }
+
+  .divider h1 { color: var(--brand, var(--accent)); }
+  .tag { display:inline-block; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); font-size: 0.9rem; font-weight: 700; }
+
+  /* chrome */
+  .bar { position: fixed; top: 0; left: 0; height: 4px; background: var(--accent); transition: width 0.2s ease; z-index: 20; }
+  .nav {
+    position: fixed; bottom: 14px; right: 16px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.85rem; color: var(--muted); z-index: 20;
+  }
+  .nav button {
+    background: rgba(30,41,59,0.7); border: 1px solid var(--line); color: var(--ink);
+    border-radius: 9px; padding: 7px 12px; cursor: pointer; font-size: 0.9rem;
+  }
+  .nav button:hover { background: rgba(51,65,85,0.9); }
+  .hint { position: fixed; bottom: 16px; left: 16px; font-size: 0.78rem; color: rgba(148,163,184,0.7); z-index: 20; }
+
+  .edge { position: fixed; top: 0; bottom: 0; width: 14vw; z-index: 15; cursor: pointer; }
+  .edge.left { left: 0; }
+  .edge.right { right: 0; }
+
+  @media print {
+    body { overflow: visible; background: #fff; color: #111; }
+    .deck { position: static; }
+    .slide { position: static; display: flex !important; min-height: 100vh; page-break-after: always; border-bottom: 1px solid #ccc; }
+    .bar, .nav, .hint, .edge { display: none !important; }
+    h1, h2, .kicker, .divider h1 { color: #111 !important; }
+    .msg, .choice, .outcome, .fault, .teacher, .panel { border-color: #bbb !important; }
+    .msg.system { background: #f2f2f2; }
+  }
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+<div class="deck" id="deck"></div>
+<div class="edge left" onclick="go(-1)"></div>
+<div class="edge right" onclick="go(1)"></div>
+<div class="hint">← → move · F fullscreen · Ctrl+P to save as PDF</div>
+<div class="nav">
+  <button onclick="go(-1)">‹ Back</button>
+  <span id="count">1 / 1</span>
+  <button onclick="go(1)">Next ›</button>
+</div>
+
+<script>
+const NOT_YOUR_FAULT =
+  "If someone online tricks, pressures or scares you, it is never your fault — " +
+  "not even if you already replied, added them, shared something, or sent a photo. " +
+  "You are not in trouble. Tell a trusted adult straight away and they will help you sort it out.";
+
+const scenarios = [
+  {
+    platform: "Roblox",
+    brand: "#f26666",
+    watch: "Someone who won't leave you alone, offers free stuff, asks personal questions, and wants to move the chat somewhere private.",
+    stages: [
+      {
+        title: "Stage 1: The annoyance",
+        messages: [
+          ["system", "You are playing your favourite open-world game on Roblox. You notice a player named NeonShadow99 has started following your avatar everywhere."],
+          ["other", "NeonShadow99", "Hey, talk to me"],
+          ["system", "They stand right next to you. They use the jump emote repeatedly and block your character from moving."]
+        ],
+        talk: "What should you do when someone keeps bothering you online?",
+        best: 2,
+        choices: [
+          ["Type in public chat: “Stop following me, you creep, get a life.”",
+           "Your aggressive response gives the player what they want: attention. They follow you even closer and start spamming chat with taunts. This escalates the situation."],
+          ["Leave the server and join a different one to see if they follow you.",
+           "Smart reset! But 10 minutes later, a notification pops up: NeonShadow99 has joined your server and sent you a friend request. Your join settings are public, so they can track you."],
+          ["Block the user immediately using the in-game menu.",
+           "Clean break! Blocking stops direct interaction. (For this scenario, imagine you chose B or forgot to block, so we can see what happens when someone persists.)"]
+        ]
+      },
+      {
+        title: "Stage 2: The friend request & direct message",
+        messages: [
+          ["system", "After moving to another game, NeonShadow99 sends you a party invite, followed by a direct chat message:"],
+          ["other", "NeonShadow99", "Sorry about earlier! My friend dared me to follow someone 😂 I noticed your avatar looks cool. Do you want to join my private server? I have the VIP pass and I can give you a bunch of legendary pets/items."],
+          ["system", "They’re offering free in-game items and exclusive access."]
+        ],
+        talk: "How do “gifts” and “offers” get used to build trust with someone you don’t know?",
+        best: 2,
+        choices: [
+          ["Accept the friend request and say: “Sure, what items do you have?”",
+           "RED FLAG! You’ve entered the “bribe” trap. Predators and scammers frequently use free in-game currency, rare items, or exclusive server access to lower a player’s guard. You’ve made a new “friend” who now feels like a benefactor."],
+          ["Ignore the party invite, but reply: “No thanks, I don’t need help.”",
+           "The user keeps pressing: “Come on, don’t be boring, it takes two seconds.” They realise you’re open to messaging back. By engaging, you’ve kept the door open."],
+          ["Decline the friend request, adjust privacy settings so strangers cannot follow you, and tell a trusted adult.",
+           "BEST PATH! Restricting privacy settings removes the technical vulnerability. Declining removes social pressure. Telling an adult ensures you’re not handling this alone."]
+        ]
+      },
+      {
+        title: "Stage 3: The deepening conversation",
+        messages: [
+          ["system", "You’ve been playing in their private server. Kai seems friendly and keeps complimenting your skills. Then the questions start:"],
+          ["other", "NeonShadow99", "You’re really good at this. What year are you in? Do you go to a school near Stockton? What’s your real name so I don’t have to keep calling you your username?"],
+          ["system", "The conversation has moved on to questions about you."]
+        ],
+        talk: "Why do predators ask “innocent” questions about school, location, and schedule?",
+        best: 2,
+        choices: [
+          ["Answer with just your first name and school year: “I’m Sam and I’m in Year 6, but I’m not saying what school.”",
+           "BREADCRUMB EFFECT! Even small details (first name, age or year group, region) can be combined with other social profiles to identify who you are. They now know enough to search for you."],
+          ["Give a fake name and fake location so they stop asking.",
+           "While safer than giving real details, lying keeps you engaged in an unsafe dynamic. The player will continue probing for more inconsistencies or private details."],
+          ["Recognise the boundary breach, stop chatting, take screenshots, and block/report them.",
+           "STRONG DEFENSIVE BOUNDARY! Identifying when friendly gaming banter turns into an interrogation is a vital safety skill. Screenshots are crucial evidence."]
+        ]
+      },
+      {
+        title: "Stage 4: Moving off the game",
+        messages: [
+          ["system", "NeonShadow99 sends a message:"],
+          ["other", "NeonShadow99", "Roblox chat tags out too many words and it’s annoying. Add me on Discord / Snapchat / TikTok instead. My handle is @NeonGhost. Add me there and I’ll send you a gift card code for 1,000 Robux, but don’t tell anyone or they’ll try to steal it."],
+          ["system", "The message sits there, waiting for your reply."]
+        ],
+        talk: "What are the three biggest red flags that something is NOT safe online?",
+        best: 2,
+        choices: [
+          ["Add them on Discord, but make sure your personal photo isn’t on your profile.",
+           "DANGEROUS! Moving off-platform bypasses Roblox’s filters, chat moderation, and safety controls. Private platforms allow them to send malicious links, request real-life photos, or engage in grooming. A profile picture doesn’t protect you."],
+          ["Refuse to move off-platform, tell them to just send the code here or forget it.",
+           "Good instinct! But demanding the code keeps the door open. Scammers often pivot to guilt-tripping or anger when challenged."],
+          ["Stop immediately. Do not reply. Report their account using Roblox’s built-in reporting tool, block them, and show the conversation to a parent, teacher, or guardian.",
+           "BEST PATH! This spots three big warning signs: moving off the game, bribes (Robux and gift cards), and secrecy (“don’t tell anyone”). Reporting alerts Roblox’s safety team, blocking stops the contact, and telling an adult means you are not dealing with it on your own. And if you had already added them or answered a question first, that would still not be your fault."]
+        ]
+      }
+    ],
+    prompts: [
+      "Why do people online sometimes pretend to be someone they’re not?",
+      "What should you do if someone asks you to keep a chat secret from your parents?",
+      "How do you know if someone online is trustworthy?",
+      "What should you do if you feel uncomfortable in a game or chat?"
+    ]
+  },
+  {
+    platform: "WhatsApp",
+    brand: "#34d399",
+    watch: "A “joke” in a group chat that turns into bullying — and what you do when everyone else is joining in.",
+    stages: [
+      {
+        title: "Stage 1: The “funny” clip",
+        messages: [
+          ["system", "It is Sunday afternoon. You are in a WhatsApp group called “Hartburn Legends ⚽🎮” with about 15 classmates. Earlier in PE, Leo missed an open goal, tripped over the football, and kicked his trainer into a muddy puddle. Someone recorded a video."],
+          ["other", "Ben", "Bro thought he was Haaland 💀👟"],
+          ["system", "Within two minutes, five other people have sent laughing emojis. You watch the clip and it does look quite funny."]
+        ],
+        talk: "When does a funny moment become bullying?",
+        best: 2,
+        choices: [
+          ["Send a laughing emoji or reply: “Hahaha no way, his shoe flew off!”",
+           "Your laugh tells the group, “This is fine, keep going!” The instigators feel encouraged. To Leo, everyone who laughs looks like they’re piling on."],
+          ["Just watch and stay silent. You don’t reply, but you keep reading the notifications.",
+           "THE SILENT BYSTANDER: Doing nothing feels safe, but to Leo, everyone who stays silent looks like they’re laughing along with the bullies. Silence = complicity."],
+          ["Privately message Leo outside the group: “Hey, saw the video. You okay with them sharing that?”",
+           "BEST PATH! Great emotional intelligence. Checking in shows Leo he isn’t alone and gives him a chance to say if it genuinely bothers him. You’re being an ally."]
+        ]
+      },
+      {
+        title: "Stage 2: The custom stickers & ganging up",
+        messages: [
+          ["system", "Leo types in the group:"],
+          ["other", "Leo", "Can you please delete it guys, it’s not funny."],
+          ["system", "Instead of deleting it, someone takes a screenshot of Leo’s muddy face, turns it into a custom WhatsApp sticker, and posts it three times:"],
+          ["other", "Ben", "Chill out Leo, it’s just a joke 😂 don’t be a crybaby"],
+          ["other", "Maya", "Always ruins the fun"]
+        ],
+        talk: "How does spreading mean content make YOU part of the problem?",
+        best: 1,
+        choices: [
+          ["Try to play peacemaker: “Alright leave it now guys, he said stop lol.”",
+           "The “lol” softens your tone and makes them think you’re still treating it as a joke. Bullies often ignore weak protests because they don’t take them seriously."],
+          ["Message the person who made the sticker privately: “Come on, he asked you to take it down. That’s out of order.”",
+           "UPSTANDER PATH! Calling someone out 1-on-1 is often much more effective than calling them out in the group, because they don’t have an audience to perform for."],
+          ["Forward the sticker to another friend outside the group to show how wild the chat is.",
+           "MULTIPLIER EFFECT! Forwarding mean content makes you part of the bullying chain. Once a sticker leaves the group, it can never be deleted from everyone’s phones. You’ve spread it."]
+        ]
+      },
+      {
+        title: "Stage 3: The kick-out & personal attacks",
+        messages: [
+          ["system", "By Sunday evening, things turn nasty:"],
+          ["other", "Jayden", "Nobody even passed to you in the match anyway because you’re rubbish."],
+          ["system", "The group admin removes Leo from the group. Now the messages get even meaner, making fun of his trainers, his family, sharing edited pictures."]
+        ],
+        talk: "Why is it important to save evidence of cyberbullying?",
+        best: 2,
+        choices: [
+          ["Leave the group immediately so you don’t have to see it.",
+           "You step away from the nastiness, but leaving means you lose the ability to speak up, gather evidence, or protect your friend. You become invisible."],
+          ["Type in the chat: “This isn’t banter anymore, it’s just bullying. It needs to stop.”",
+           "BRAVE UPSTANDER! Labelling it “bullying” breaks the group spell. Often, other silent children are uncomfortable too, and your message gives them permission to agree."],
+          ["Take screenshots of the nastiest messages and the members list, then tell an adult at home.",
+           "EVIDENCE SAVER! Extremely smart. Messages can be deleted for everyone. Screenshots ensure there’s real proof when school investigates. Adults need evidence to act."]
+        ]
+      },
+      {
+        title: "Stage 4: Monday morning on the playground",
+        messages: [
+          ["system", "It is Monday morning before the bell. You walk onto the yard. Leo is standing by the school wall by himself, looking miserable. Two of the kids who posted the stickers are nearby, whispering and looking over at him with smirks."]
+        ],
+        talk: "What’s the difference between being a bystander, an upstander, and an ally?",
+        best: 2,
+        choices: [
+          ["Go over to the group, point at them, and shout: “You lot are bullies and you’re getting reported!”",
+           "Confrontation might start a fight or get you in trouble for shouting. It also makes Leo feel even MORE embarrassed by having a crowd gather around him."],
+          ["Walk straight past, go stand with Leo, and ask if he wants to play football / hang out.",
+           "BEST PATH! Exactly what Leo needs. Bullies want their target to feel isolated and unpopular. Standing with him immediately breaks their power. Real peer support."],
+          ["Go straight to your Year 6 teacher before registration, explain what happened, and show screenshots.",
+           "BEST LONG-TERM PATH! Schools take online bullying seriously. Teachers can deal with it so you and Leo do not have to face it alone, and the screenshots give them the proof they need to act. Nobody who was bullied here did anything wrong."]
+        ]
+      }
+    ],
+    prompts: [
+      "When does banter stop being banter?",
+      "Why do kids sometimes laugh along with bullying when they don’t think it’s funny?",
+      "What’s the power of a single person speaking up against a group?",
+      "How can you be an upstander without putting yourself at risk?"
+    ]
+  },
+  {
+    platform: "Snapchat",
+    brand: "#fbbf24",
+    watch: "A stranger added through Quick Add who uses streaks, Snap Map and “innocent” questions to work out who you are and where you live.",
+    stages: [
+      {
+        title: "Stage 1: The Quick Add & the streak",
+        messages: [
+          ["system", "You recently set up a Snapchat account. One evening, you get an add notification from “Kai_X24” via Quick Add. Their Bitmoji looks like someone your age in a football hoodie. You share two mutual friends."],
+          ["other", "Kai_X24", "Heyy starting new streaks 🔥 send back so we don’t lose the timer!"],
+          ["system", "Over the next three days, you trade snaps back and forth. Kai keeps messaging: “Let’s keep this streak going forever, don’t leave me on delivered!”"]
+        ],
+        talk: "Why do apps use “streaks” to keep you using them every day?",
+        best: 2,
+        choices: [
+          ["Feel excited about the high streak, send snaps of your bedroom, your pets, and your walk home from school.",
+           "INFORMATION LEAK! Background clues in snaps (posters in your room, house numbers, distinctive street signs) leak private details without you realising. Kai is building a picture of where you live."],
+          ["Keep sending plain ceiling / blank screen snaps just to maintain the streak, but don’t reply to text messages.",
+           "Sending blanks keeps the connection active. Bad actors often use “streaks” as a foot in the door to establish daily habits and make themselves feel like a regular part of your routine."],
+          ["Ask yourself: “Do I actually know this person?” and check with mutual friends about Kai.",
+           "BEST PATH! Crucial reality check. Having “mutual friends” on Snapchat often just means your friends also accepted a stranger without thinking. Kai is a stranger."]
+        ]
+      },
+      {
+        title: "Stage 2: The Snap Map request",
+        messages: [
+          ["system", "Friday afternoon. Kai sends a snap showing their Bitmoji on the Snap Map at a local park. Then:"],
+          ["other", "Kai_X24", "Wait, why are you on Ghost Mode? Turn your location on for friends so we can see when we’re nearby! I want to see if you go to the park by the leisure centre."],
+          ["system", "Kai is asking you to enable location sharing."]
+        ],
+        talk: "Why is live location data so dangerous?",
+        best: 2,
+        choices: [
+          ["Turn Snap Map to “My Friends” so Kai can see you, thinking it’s fine since they’re on your friends list.",
+           "MAJOR DANGER! Snap Map pinpointing is shockingly precise. It shows the exact street, your house, when you leave for school, and when you’re home alone. A stranger should NEVER see your live location."],
+          ["Make an excuse: “My parents don’t let me turn on location,” but keep Kai on your friends list.",
+           "Blaming parents avoids confrontation, but it lets Kai know you’re easily pressured. It keeps the communication channel open for more manipulation."],
+          ["Keep Ghost Mode ON and remove Kai from your friends list.",
+           "BEST PATH! Ghost Mode is your primary shield on Snapchat. A real friend who goes to your school doesn’t need an app tracker. Removing them stops the manipulation."]
+        ]
+      },
+      {
+        title: "Stage 3: Fishing for school & uniform details",
+        messages: [
+          ["system", "Monday morning. Kai sends:"],
+          ["other", "Kai_X24", "Ugh, hate Mondays. Our headteacher is doing an inspection today. What school do you go to again? Is your uniform the green jumper or the blue blazer one? Send a selfie so I can see your school badge lol."],
+          ["system", "Kai asks a few quick questions about your school."]
+        ],
+        talk: "How do predators piece together information about you?",
+        best: 2,
+        choices: [
+          ["Send a selfie wearing your school jumper, covering your face with a sticker.",
+           "School logos, ties, and distinctive jumper colours give away your school immediately, even with your face hidden. Kai now knows exactly what gates you walk out of at 3:15pm every weekday."],
+          ["Reply with your school name: “I go to St Peter’s, our uniform is awful.”",
+           "You’ve handed a stranger your daily timetable and school location. They now know when and where to find you in the real world."],
+          ["Recognise the “jigsaw” pattern, stop replying, take a screenshot, and block Kai.",
+           "SPOTTING THE JIGSAW! Predators rarely ask for your full address in one go. They collect pieces of a puzzle (town, school, sports club) until they can find you in real life."]
+        ]
+      },
+      {
+        title: "Stage 4: The escalation & pressure",
+        messages: [
+          ["system", "Because you haven’t sent a face picture or school uniform, Kai’s tone shifts from friendly to pushy. The streak countdown is running. Rapid messages come:"],
+          ["other", "Kai_X24", "Why are you ignoring me? Send a live selfie right now or the streak dies."],
+          ["other", "Kai_X24", "Are you actually who you say you are? Prove it, send a snap of your face right now or I’m telling everyone you’re a weirdo."],
+          ["system", "The messages come through fast, one after another."]
+        ],
+        talk: "Why do apps make streaks feel so important when they’re really just numbers?",
+        best: 2,
+        choices: [
+          ["Panic about the streak, quickly send a selfie with the timer set to 1 second so they can’t save it.",
+           "DANGEROUS! Timers don’t protect you. Snaps can be photographed by another phone or recorded. Once a stranger has your real face linked to your chat history, the blackmail and pressure only increase."],
+          ["Message back angrily: “Stop being weird, you don’t even know me!” and keep arguing.",
+           "Engaging in arguments gives trolls and groomers what they want: ongoing engagement and emotional reactions. You’ve shown you’ll keep talking if they push harder."],
+          ["Remember that streaks mean nothing. Do not reply. Report them using “They are being mean or harassing me / asking for personal info”, then block and tell an adult.",
+           "BEST PATH! Reporting alerts Snapchat’s safety team, blocking stops the messages, and telling an adult means you do not carry the worry on your own. Being pressured or threatened for a photo is always a red flag, and saying no is always allowed. If you had already sent something, that would still not be your fault — an adult can still help."]
+        ]
+      }
+    ],
+    prompts: [
+      "What information can someone piece together about you from small details?",
+      "Why should you never share your live location with someone you don’t know in real life?",
+      "What’s the difference between a real friend and someone trying to manipulate you?",
+      "How do you know when a conversation has crossed from friendly to scary?"
+    ]
+  }
+];
+
+/* ---------- build slides ---------- */
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+function chatHTML(messages) {
+  return '<div class="chat">' + messages.map((m) => {
+    if (m[0] === "system") return '<div class="msg system">' + esc(m[1]) + '</div>';
+    return '<div class="msg other"><span class="who">' + esc(m[1]) + '</span>' + esc(m[2]) + '</div>';
+  }).join("") + '</div>';
+}
+
+function letter(i) { return String.fromCharCode(65 + i); }
+
+const slides = [];
+
+slides.push(`
+  <p class="kicker">Mr White · Computing</p>
+  <h1>Staying safe online</h1>
+  <p style="max-width:820px">Three real apps. One choice at a time. We read what happens, talk about it as a class, decide together, then see how it plays out.</p>
+`);
+
+slides.push(`
+  <div class="teacher">
+    <h3>For the teacher — before you start</h3>
+    <p>This lesson can prompt a child to disclose something that has happened to them. If that happens, follow your school’s child protection policy and speak to your DSL. Do not promise to keep it secret. Keep the tone calm and matter-of-fact rather than frightening.</p>
+  </div>
+`);
+
+slides.push(`
+  <p class="kicker">Learning objective</p>
+  <h1>Make safe choices online</h1>
+  <ul class="bullets" style="max-width:820px">
+    <li>Spot the warning signs when someone is trying to trick or pressure you.</li>
+    <li>Understand how group pressure works, and how one person can change it.</li>
+    <li>Know what to do: say no, block, report, keep evidence, and tell a trusted adult.</li>
+  </ul>
+  <p style="max-width:820px;color:var(--muted)">You might not be old enough to use these apps yet — but lots of people your age do, so it is worth knowing.</p>
+`);
+
+slides.push(`
+  <h2>How each scenario works</h2>
+  <ul class="bullets" style="max-width:860px">
+    <li><strong>The situation</strong> — messages come in. Read them together.</li>
+    <li><strong>Talk about it</strong> — what would you actually do?</li>
+    <li><strong>Vote</strong> — pick A, B or C as a class.</li>
+    <li><strong>What happens</strong> — we reveal the outcome of every choice, and why.</li>
+  </ul>
+`);
+
+scenarios.forEach((sc) => {
+  slides.push(`
+    <div class="divider" style="--brand:${sc.brand}">
+      <span class="tag">${esc(sc.platform)}</span>
+      <h1 style="margin-top:14px">${esc(sc.stages.length)}-part scenario</h1>
+      <h3>What to watch for</h3>
+      <p style="max-width:860px">${esc(sc.watch)}</p>
+    </div>
+  `);
+
+  sc.stages.forEach((st) => {
+    slides.push(`
+      <p class="kicker" style="color:${sc.brand}">${esc(sc.platform)}</p>
+      <h2>${esc(st.title)}</h2>
+      ${chatHTML(st.messages)}
+      <div class="choices">
+        ${st.choices.map((c, i) => `
+          <div class="choice"><div class="letter">${letter(i)}</div><div>${esc(c[0])}</div></div>
+        `).join("")}
+      </div>
+      <div class="talk">Talk about it: ${esc(st.talk)}</div>
+    `);
+
+    slides.push(`
+      <p class="kicker" style="color:${sc.brand}">${esc(sc.platform)} · ${esc(st.title)}</p>
+      <h2>What happens</h2>
+      <div class="choices">
+        ${st.choices.map((c, i) => `
+          <div class="outcome ${i === st.best ? "best" : ""}">
+            <div class="letter">${letter(i)}</div>
+            <div class="body">
+              <p class="pick">${esc(c[0])}${i === st.best ? '<span class="best-flag">SAFEST CHOICE</span>' : ""}</p>
+              <p class="what">${esc(c[1])}</p>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `);
+  });
+
+  slides.push(`
+    <div class="fault">
+      <p class="kicker" style="color:var(--good)">Remember</p>
+      <p>${esc(NOT_YOUR_FAULT)}</p>
+    </div>
+  `);
+
+  slides.push(`
+    <p class="kicker" style="color:${sc.brand}">${esc(sc.platform)}</p>
+    <h2>Talk about it</h2>
+    <ul class="bullets" style="max-width:900px">
+      ${sc.prompts.map((p) => `<li>${esc(p)}</li>`).join("")}
+    </ul>
+  `);
+});
+
+slides.push(`
+  <h1>The three golden rules</h1>
+  <ul class="bullets" style="max-width:900px">
+    <li><strong>Tell a trusted adult.</strong> A parent, carer, teacher, or another adult you trust. You will not be in trouble.</li>
+    <li><strong>It is never your fault.</strong> Even if you already replied, added someone, or sent something.</li>
+    <li><strong>Block, report, keep the evidence.</strong> Screenshots help an adult sort it out.</li>
+  </ul>
+  <p style="max-width:900px;color:var(--muted)">You can also talk to Childline any time: <strong>0800 1111</strong> — free and confidential.</p>
+`);
+
+/* ---------- render + navigation ---------- */
+const deck = document.getElementById("deck");
+deck.innerHTML = slides.map((html, i) =>
+  `<section class="slide${i === 0 ? " current" : ""}" data-i="${i}">${html}</section>`
+).join("");
+
+const sections = [...deck.querySelectorAll(".slide")];
+let idx = 0;
+
+function show(n) {
+  idx = Math.max(0, Math.min(sections.length - 1, n));
+  sections.forEach((s, i) => s.classList.toggle("current", i === idx));
+  document.getElementById("count").textContent = (idx + 1) + " / " + sections.length;
+  document.getElementById("bar").style.width = ((idx + 1) / sections.length * 100) + "%";
+  try { location.hash = String(idx + 1); } catch (e) {}
+}
+function go(d) { show(idx + d); }
+window.go = go;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); go(1); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); go(-1); }
+  else if (e.key === "Home") { show(0); }
+  else if (e.key === "End") { show(sections.length - 1); }
+  else if (e.key.toLowerCase() === "f") {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen().catch(() => {});
+  }
+});
+
+const start = parseInt((location.hash || "").replace("#", ""), 10);
+show(Number.isFinite(start) && start > 0 ? start - 1 : 0);
+</script>
+</body>
+</html>
