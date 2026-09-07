@@ -1,0 +1,51 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: #0a0e27;
+  color: #e0e7ff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+button {
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+a {
+  color: #6366f1;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

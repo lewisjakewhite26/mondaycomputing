@@ -1,0 +1,184 @@
+.hub-stage {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px 20px;
+  background: radial-gradient(ellipse at 50% -10%, #171a3a 0%, #0a0e27 55%, #06070f 100%);
+}
+
+/* ---- Tablet ---- */
+.tablet {
+  position: relative;
+  width: min(920px, 94vw, 118vh);
+  aspect-ratio: 4 / 3;
+  border-radius: 38px;
+  padding: 16px;
+  background: linear-gradient(150deg, #6d6d72 0%, #232327 16%, #17171a 44%, #2c2c30 62%, #0f0f12 84%, #55555a 100%);
+  box-shadow: 0 50px 130px rgba(0, 0, 0, 0.65), inset 0 0 3px rgba(255, 255, 255, 0.35);
+}
+
+.tablet-cam {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #223142, #05070a 70%);
+  box-shadow: 0 0 2px rgba(90, 140, 210, 0.4);
+  z-index: 3;
+}
+
+.tablet-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(55% 45% at 22% 18%, rgba(99, 102, 241, 0.55), transparent 70%),
+    radial-gradient(50% 45% at 82% 78%, rgba(14, 165, 183, 0.5), transparent 70%),
+    radial-gradient(40% 40% at 60% 45%, rgba(217, 70, 239, 0.28), transparent 70%),
+    linear-gradient(160deg, #241f52 0%, #141636 45%, #0c1030 100%);
+  box-shadow: inset 0 0 0 3px #050505;
+}
+
+.tablet-gloss {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(118deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.03) 18%, transparent 40%);
+}
+
+.tablet-screen .phone-statusbar {
+  background: transparent;
+  color: #fff;
+  height: 32px;
+  padding: 6px 28px 0;
+  z-index: 5;
+}
+
+/* ---- Desktop / app grid ---- */
+.tablet-desktop {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(22px, 5vh, 48px);
+  padding: 16px 20px;
+  z-index: 5;
+}
+
+.tablet-heading {
+  margin: 0;
+  font-size: clamp(1rem, 2.3vw, 1.5rem);
+  font-weight: 700;
+  color: #f1f3ff;
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.app-grid {
+  display: flex;
+  justify-content: center;
+  gap: clamp(28px, 6vw, 76px);
+}
+
+.app-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.4vh, 14px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.app-icon-tile {
+  position: relative;
+  width: clamp(66px, 12vw, 104px);
+  aspect-ratio: 1;
+}
+
+.app-icon-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+}
+
+.app-label {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-weight: 600;
+  color: #f4f5ff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+
+.tablet-progress {
+  margin: 0;
+  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---- Dock ---- */
+.tablet-dock {
+  align-self: center;
+  display: flex;
+  gap: clamp(12px, 2vw, 22px);
+  margin: 0 auto clamp(14px, 3vh, 26px);
+  padding: clamp(8px, 1.4vh, 14px);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 5;
+}
+
+.dock-icon {
+  width: clamp(42px, 6vw, 58px);
+  height: clamp(42px, 6vw, 58px);
+  border-radius: 24%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.tablet-home {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 116px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.55);
+  z-index: 6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tablet {
+    transition: none;
+  }
+}
