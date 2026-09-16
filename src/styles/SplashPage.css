@@ -249,6 +249,110 @@
   background:
     radial-gradient(ellipse at 50% 34%, rgba(255, 120, 60, 0.16), transparent 62%),
     linear-gradient(180deg, #141210 0%, #090807 100%);
+  transition: background 0.5s ease;
+}
+
+.splash-screen-dark {
+  background: #000;
+}
+
+/* ---- Ringing: visual "vibrate" on the whole handset, timed to match the
+   two-buzz ring cadence in utils/ringtone.ts (2.4s cycle, buzz then buzz
+   then a long quiet gap) since there's no real vibration motor to fire ---- */
+@keyframes phone-ring-jitter {
+  0%, 15%, 30.5%, 100% { transform: translateX(0) rotate(0deg); }
+  2% { transform: translateX(-4px) rotate(-1deg); }
+  4% { transform: translateX(4px) rotate(1deg); }
+  6% { transform: translateX(-4px) rotate(-1deg); }
+  8% { transform: translateX(4px) rotate(1deg); }
+  10% { transform: translateX(-3px) rotate(-0.6deg); }
+  12% { transform: translateX(2px) rotate(0.4deg); }
+  17.5% { transform: translateX(-4px) rotate(-1deg); }
+  19.5% { transform: translateX(4px) rotate(1deg); }
+  21.5% { transform: translateX(-4px) rotate(-1deg); }
+  23.5% { transform: translateX(4px) rotate(1deg); }
+  25.5% { transform: translateX(-3px) rotate(-0.6deg); }
+  27.5% { transform: translateX(2px) rotate(0.4deg); }
+}
+
+.splash-phone-ringing {
+  animation: phone-ring-jitter 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-phone-ringing {
+    animation: none;
+  }
+}
+
+/* ---- Incoming call screen ---- */
+.call-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 58px 20px 34px;
+}
+
+.call-time {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.call-id {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.call-avatar-wrap {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.call-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(120, 200, 130, 0.35), transparent 70%);
+}
+
+.call-avatar {
+  position: relative;
+  z-index: 2;
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  background: linear-gradient(160deg, #4a4a4f, #26262a);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.call-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.call-sub {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ---- Organic orb ---- */

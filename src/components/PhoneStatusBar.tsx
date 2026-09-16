@@ -1,3 +1,5 @@
+import { useClock } from '../utils/useClock';
+
 interface PhoneStatusBarProps {
   /** dark text on a light header (Snapchat), otherwise white */
   dark?: boolean;
@@ -6,9 +8,10 @@ interface PhoneStatusBarProps {
 /** iOS-style status bar: time, signal, wifi, battery. */
 export default function PhoneStatusBar({ dark }: PhoneStatusBarProps) {
   const fill = dark ? '#111' : '#fff';
+  const time = useClock();
   return (
     <div className={`phone-statusbar ${dark ? 'is-dark' : ''}`}>
-      <span className="phone-statusbar-time">9:41</span>
+      <span className="phone-statusbar-time">{time}</span>
       <span className="phone-statusbar-right">
         <svg viewBox="0 0 18 12" width="17" height="11" aria-hidden>
           <path fill={fill} d="M1 8h2v3H1zM5 6h2v5H5zM9 4h2v7H9zM13 2h2v9h-2z" />

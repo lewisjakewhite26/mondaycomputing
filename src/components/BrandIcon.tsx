@@ -27,6 +27,10 @@ const PATHS: Record<ScenarioPlatform, { tile: string; glyph: string; d: string }
   },
 };
 
+export function brandColor(platform: ScenarioPlatform): string {
+  return PATHS[platform].tile;
+}
+
 export default function BrandIcon({ platform, size = 56, fill }: BrandIconProps) {
   const { tile, glyph, d } = PATHS[platform];
   // Roblox mark reads better with a little breathing room inside the tile.

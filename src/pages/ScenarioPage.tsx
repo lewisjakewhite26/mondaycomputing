@@ -262,30 +262,36 @@ export default function ScenarioPage({ platform, onBack, onComplete }: ScenarioP
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
-      <div className="scenario-topbar">
-        <button className="hub-button" onClick={onBack}>← Hub</button>
-        <div className="stage-progress" aria-hidden>
-          {scenario.stages.map((s, i) => (
-            <span
-              key={s.id}
-              className={`progress-dot ${i === currentStageIndex ? 'active' : ''} ${
-                i < currentStageIndex ? 'done' : ''
-              }`}
-            />
-          ))}
+      <motion.div
+        className="scenario-chrome"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.55, duration: 0.35 }}
+      >
+        <div className="scenario-topbar">
+          <button className="hub-button" onClick={onBack}>← Hub</button>
+          <div className="stage-progress" aria-hidden>
+            {scenario.stages.map((s, i) => (
+              <span
+                key={s.id}
+                className={`progress-dot ${i === currentStageIndex ? 'active' : ''} ${
+                  i < currentStageIndex ? 'done' : ''
+                }`}
+              />
+            ))}
+          </div>
+          <button
+            className={`reset-inline ${armRestart ? 'is-armed' : ''}`}
+            onClick={handleRestartClick}
+          >
+            {armRestart ? 'Tap again to restart' : '↻ Restart'}
+          </button>
         </div>
-        <button
-          className={`reset-inline ${armRestart ? 'is-armed' : ''}`}
-          onClick={handleRestartClick}
-        >
-          {armRestart ? 'Tap again to restart' : '↻ Restart'}
-        </button>
-      </div>
 
-      <div className="scenario-stagebar">
-        <span className="stagebar-count">Stage {currentStageIndex + 1} of {stageCount}</span>
-        <span className="stagebar-title">{currentStage.title.replace(/^Stage \d+:\s*/, '')}</span>
-      </div>
+        <div className="scenario-stagebar">
+          <span className="stagebar-count">Stage {currentStageIndex + 1} of {stageCount}</span>
+        </div>
+      </motion.div>
 
       <div className="scenario-stage">
         <div className={`phone-frame phone-${theme.renderStyle}`}>

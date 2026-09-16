@@ -8,12 +8,13 @@
   background: radial-gradient(ellipse at 50% -10%, #171a3a 0%, #0a0e27 55%, #06070f 100%);
 }
 
-/* ---- Tablet ---- */
+/* ---- Phone (bigger + taller than the old tablet, for projector legibility
+   and room for a full app grid instead of 3 icons in a row) ---- */
 .tablet {
   position: relative;
-  width: min(920px, 94vw, 118vh);
-  aspect-ratio: 4 / 3;
-  border-radius: 38px;
+  width: min(560px, 94vw, 62vh);
+  aspect-ratio: 9 / 17;
+  border-radius: 48px;
   padding: 16px;
   background: linear-gradient(150deg, #6d6d72 0%, #232327 16%, #17171a 44%, #2c2c30 62%, #0f0f12 84%, #55555a 100%);
   box-shadow: 0 50px 130px rgba(0, 0, 0, 0.65), inset 0 0 3px rgba(255, 255, 255, 0.35);
@@ -36,7 +37,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 24px;
+  border-radius: 34px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -71,14 +72,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(22px, 5vh, 48px);
-  padding: 16px 20px;
+  gap: clamp(20px, 4vh, 36px);
+  padding: 12px 22px;
   z-index: 5;
 }
 
 .tablet-heading {
   margin: 0;
-  font-size: clamp(1rem, 2.3vw, 1.5rem);
+  font-size: clamp(1.1rem, 3.4vw, 1.6rem);
   font-weight: 700;
   color: #f1f3ff;
   text-align: center;
@@ -86,26 +87,41 @@
 }
 
 .app-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   justify-content: center;
-  gap: clamp(28px, 6vw, 76px);
+  row-gap: clamp(18px, 3.4vh, 30px);
+  column-gap: clamp(10px, 3vw, 22px);
 }
 
-.app-icon {
+.app-icon,
+.decoy-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(8px, 1.4vh, 14px);
+  gap: clamp(8px, 1.4vh, 12px);
   background: none;
   border: none;
   cursor: pointer;
   padding: 6px;
 }
 
+.decoy-icon {
+  cursor: default;
+}
+
 .app-icon-tile {
   position: relative;
-  width: clamp(66px, 12vw, 104px);
+  width: clamp(64px, 15vw, 92px);
   aspect-ratio: 1;
+}
+
+.decoy-icon .app-icon-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24%;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .app-icon-badge {
@@ -127,7 +143,7 @@
 }
 
 .app-label {
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-size: clamp(0.85rem, 2.6vw, 1.05rem);
   font-weight: 600;
   color: #f4f5ff;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
@@ -135,7 +151,7 @@
 
 .tablet-progress {
   margin: 0;
-  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  font-size: clamp(0.8rem, 2vw, 1rem);
   font-weight: 600;
   letter-spacing: 0.4px;
   color: rgba(255, 255, 255, 0.7);

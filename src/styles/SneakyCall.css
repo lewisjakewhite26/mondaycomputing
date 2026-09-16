@@ -1,0 +1,23 @@
+.sneaky-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 4, 3, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.sneaky-phone {
+  position: relative;
+  width: min(300px, 78vw);
+  aspect-ratio: 320 / 620;
+  border-radius: 42px;
+  overflow: hidden;
+  background: #050403;
+  box-shadow:
+    0 40px 110px rgba(0, 0, 0, 0.6),
+    0 0 90px rgba(120, 200, 130, 0.22),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}

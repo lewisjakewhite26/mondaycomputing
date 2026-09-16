@@ -8,6 +8,13 @@
   align-items: center;
 }
 
+.scenario-chrome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
 /* ---- Top bar ---- */
 .scenario-topbar {
   width: 100%;
@@ -90,12 +97,6 @@
   white-space: nowrap;
 }
 
-.stagebar-title {
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: #e6ebff;
-}
-
 /* ---- Two-column stage: phone left, choices right ---- */
 .scenario-stage {
   width: 100%;
@@ -115,12 +116,16 @@
   }
 }
 
-/* ---- Realistic phone ---- */
+/* ---- Realistic phone ----
+   Bigger than a literal phone on purpose: this has to read from the back of
+   a classroom on a projector, so the frame is oversized and then zoomed up
+   again (zoom, not just a bigger box, so the text/icons inside actually
+   scale up rather than just getting more empty space around them). */
 .phone-frame {
   position: relative;
   flex-shrink: 0;
   width: min(320px, 88vw);
-  height: min(62vh, 560px);
+  height: min(66vh, 580px);
   display: flex;
   flex-direction: column;
   border-radius: 46px;
@@ -131,9 +136,16 @@
 }
 
 @media (min-width: 920px) {
+  /* real desktop/projector view — this is what actually gets used in class,
+     so this is where the size bump for back-of-room legibility lives */
   .phone-frame {
-    width: 300px;
-    height: clamp(560px, 82vh, 720px);
+    width: 340px;
+    height: clamp(600px, 70vh, 680px);
+    zoom: 1.4;
+  }
+
+  .phone-dock {
+    zoom: 1.4;
   }
 }
 
